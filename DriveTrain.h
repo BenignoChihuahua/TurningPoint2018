@@ -42,7 +42,6 @@
 
 //function declarations
 void initDriveTrain();
-void DriveOnLoop();
 void zeroEncoders();
 void resetGyro();
 void clearDriveTimer();
@@ -69,12 +68,13 @@ void initDriveTrain()
  	clearDriveTimer();
 }
 
-void DriveOnLoop()
+task DriveOnLoop()
 {
    	moveRightMotor(deadband(vexRT(Ch2) -  vexRT(Ch1),25));
 		moveLeftMotor(deadband(vexRT(Ch2) + vexRT(Ch1),25));
 		strafe(deadband(vexRT(Ch4),20));
 }
+
 
 void strafe(int val)
 {

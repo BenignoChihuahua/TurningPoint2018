@@ -20,6 +20,7 @@
 //custom includes
 #include "DriveTrain.h"
 #include "FourBarArm.h"
+#include "CatapultShooter.h"
 #include "UserControl.h"
 #include "PID.h"
 #include "util.h"

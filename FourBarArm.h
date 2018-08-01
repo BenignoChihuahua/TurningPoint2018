@@ -21,7 +21,6 @@
 
 //function declarations
 void InitRobotArm();
-void ArmOnLoop();
 void drive(int val);
 
 void InitRobotArm()
@@ -29,7 +28,7 @@ void InitRobotArm()
 }
 
 //this function is called repeatedly in the user control loop
-void ArmOnLoop()
+task ArmOnLoop()
 {
 
 }
