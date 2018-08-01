@@ -73,6 +73,7 @@ int calculateOuput(PID pidObj, float inputVal)
 	else
 		integral = pidObj.kI * pidObj.sumError;
 
+	derivative = (error - pidObj.prevError) * pidObj.kD;
 
 	pidObj.sumError += error;
 
