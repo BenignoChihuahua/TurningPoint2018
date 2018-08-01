@@ -87,4 +87,4 @@ int calculateOuput(PID pidObj, float inputVal)
 		return output;
 }
 
-#endif
+#endif //_PID_H

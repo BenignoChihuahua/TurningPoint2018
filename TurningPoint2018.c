@@ -16,7 +16,10 @@
 
 //Main competition background code...do not modify!
 #include "Vex_Competition_Includes.c"
+
+//custom includes
 #include "DriveTrain.h"
+#include "FourBarArm.h"
 #include "UserControl.h"
 #include "PID.h"
 #include "util.h"
@@ -96,7 +99,7 @@ task usercontrol()
 
 
 
-		// Remove this function call once you have "real" code.
+		// Remove these function calls once you have "real" code.
 		moveRightMotor(deadband(vexRT(Ch2) -  vexRT(Ch1),25));
 		moveLeftMotor(deadband(vexRT(Ch2) + vexRT(Ch1),25));
 		strafe(deadband(vexRT(Ch4),20));
