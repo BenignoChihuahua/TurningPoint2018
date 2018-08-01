@@ -1,3 +1,6 @@
+#ifndef _PID_H
+#define _PID_H
+
 #include "PID.h"
 
 /*
@@ -47,6 +50,11 @@ void setTarget(PID pidObj, float target)
 	pidObj.setpoint = target;
 }
 
+/*
+ * Implements a PID control algorithm to smooth and filter output to motors
+ *
+ * inputVal - the value from the controlling sensor such as an optical encoder or gyro
+ */
 int calculateOuput(PID pidObj, float inputVal)
 {
 	pidObj.prevInput = inputVal;
@@ -78,3 +86,5 @@ int calculateOuput(PID pidObj, float inputVal)
 
 		return output;
 }
+
+#endif

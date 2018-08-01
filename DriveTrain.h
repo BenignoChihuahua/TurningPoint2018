@@ -1,3 +1,6 @@
+#ifndef _DRIVE_TRAIN_H
+#define _DRIVE_TRAIN_H
+
 #include "DriveTrain.h"
 
 /*
@@ -37,6 +40,7 @@
  * -----------------------------------------------------------------
  */
 
+//function declarations
 void initDriveTrain();
 void zeroEncoders();
 void resetGyro();
@@ -48,7 +52,8 @@ float driveDistance(int numRotations);
 float driveVelocity(int encoderCounts);
 float numRotations(int encoderCounts);
 
-float timeDifference;//this is the time that is passed on each iteration
+//module variables
+float timeDifference;//this is the time that is passed on each iteration of the auto or user loop
 
 
 void initDriveTrain()
@@ -114,3 +119,5 @@ void clearDriveTimer()
 {
 	ClearTimer(DRIVE_TIMER);
 }
+
+#endif
