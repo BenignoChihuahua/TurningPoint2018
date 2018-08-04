@@ -35,8 +35,23 @@
  */
 void operatorControl() {
 
+
 	while (1) {
-		DriveOnLoop();
+		//DriveOnLoop();
+		setGyroSetpoint(0);
+		if(distanceTraveled((getRightEncoder() + getLeftEncoder())/2) < 48)
+		{
+			printf("Distance Traveled: %f \n",distanceTraveled((getRightEncoder() + getLeftEncoder())/2));
+			driveDistance(5);
+		}
+		else
+		{
+			motorSet(2,0);
+			motorSet(3,0);
+			motorSet(4,0);
+			motorSet(5,0);
+		}
+
 		ArmOnLoop();
 		IntakeOnLoop();
     /*

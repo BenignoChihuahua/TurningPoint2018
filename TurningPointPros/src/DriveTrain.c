@@ -1,5 +1,7 @@
 #include <API.h>
+#include <math.h>
 #include "DriveTrain.h"
+#include "PID.h"
 #include "util.h"
 
 #define FRONT_RIGHT_MOTOR 2
@@ -16,19 +18,21 @@
 
 #define WHEEL_CIRCUM 9.6 //in inches
 
+
 void InitDriveTrain()
 {
   RightEncoder = encoderInit(RIGHT_ENC_TOP, RIGHT_ENC_BOTTOM, true);
   LeftEncoder = encoderInit(LEFT_ENC_TOP,LEFT_ENC_BOTTOM,true);
   baseGyro = gyroInit(GYRO,0);
+  PIDInit(gyroPID,1.4,0.0,0.0);
+  PIDInit(velPID,0.0,0.0,0.0);
+  PIDInit(rightEncPID,0.0,0.0,0.0);
+  PIDInit(leftEncPID,0.0,0.0,0.0);
 }
 
 void DriveOnLoop()
 {
-  /*
-  int prevLeftEnc =  getLeftEncoder();
-  int prevRightEnc = getRightEncoder();
-  */
+
 
   if(!(SystemsError()))
   {
@@ -41,31 +45,39 @@ void DriveOnLoop()
       motorSet(3,-power + turn - strafe);
       motorSet(4,power + turn  + strafe);//leftmotors
       motorSet(5,power + turn  - strafe);
-      //arcadeDrive(3,4); //arcade drive with these axis
-      //mecanumDrive(1);
   }
 
-  /*int finalLeftEnc = getLeftEncoder();
-  int finalRightEnc = getRightEncoder();
-  double rightDistance = distanceTraveled(finalRightEnc - prevRightEnc);
-  double leftDistance = distanceTraveled(finalLeftEnc - prevLeftEnc);
-  setRightVel(rightDistance/0.02);
-  setLeftVel(leftDistance/0.02);*/
   if(iteration % 10)
   {
-    printf("[ ");
-    //printf("RightVelocity: %f, ", rightDistance/0.02);
-    //printf("LeftVelocity: %f, ", rightDistance/0.02);
-    printf("RightEnc: %d, ", encoderGet(RightEncoder));
-    printf("RightEnc: %d, ", encoderGet(LeftEncoder));
-    printf("BaseGyro: %d ", gyroGet(baseGyro));
-
-    printf("] \n");
-    printf("%d, ", getRightEncoder());
-    printf("%d, ", getLeftEncoder());
-    printf("%d \n", getYaw());
+    finalLeftEnc = getLeftEncoder();
+    finalRightEnc = getRightEncoder();
+    double rightDistance = distanceTraveled(finalRightEnc - prevRightEnc);
+    double leftDistance = distanceTraveled(finalLeftEnc - prevLeftEnc);
+    setRightVel(rightDistance/0.02);
+    setLeftVel(leftDistance/0.02);
+    prevRightEnc = encoderGet(RightEncoder);
+    prevLeftEnc = encoderGet(LeftEncoder);
   }
+
+  printf("[ ");
+  printf("RightVelocity: %f, ", rightVel);
+  printf("LeftVelocity: %f, ", leftVel);
+  printf("RightEnc: %d, ", encoderGet(RightEncoder));
+  printf("RightEnc: %d, ", encoderGet(LeftEncoder));
+  printf("BaseGyro: %d ", gyroGet(baseGyro));
+  printf("distance traveled: %f", distanceTraveled(encoderGet(RightEncoder)));
+  printf("] \n");
+
   ++iteration;
+}
+
+void driveDistance(double x)
+{
+    int correction = deadband(CalculateOutput(gyroPID, getYaw()), 15);
+    motorSet(2,-64 + correction);
+    motorSet(3,-64 + correction);
+    motorSet(4,64 - correction);
+    motorSet(5,64 - correction);
 }
 
 void arcadeDrive(unsigned char vert_axis, unsigned char hor_axis)
@@ -121,6 +133,11 @@ int getLeftEncoder()
 int getYaw()
 {
   return gyroGet(baseGyro);
+}
+
+void setGyroSetpoint(int degree)
+{
+  gyroPID.setPoint = degree;
 }
 
 void setRightVel(double vel)
