@@ -35,7 +35,6 @@
  */
 void operatorControl() {
 
-	InitDriveTrain();
 	while (1) {
 		DriveOnLoop();
 		ArmOnLoop();

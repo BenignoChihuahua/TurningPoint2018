@@ -7,10 +7,10 @@
 #define FRONT_LEFT_MOTOR  4
 #define BACK_LEFT_MOTOR   5
 
-#define RIGHT_ENC_TOP 2
-#define RIGHT_ENC_BOTTOM 1
-#define LEFT_ENC_TOP 4
-#define LEFT_ENC_BOTTOM 3
+#define RIGHT_ENC_TOP 8
+#define RIGHT_ENC_BOTTOM 9
+#define LEFT_ENC_TOP 6
+#define LEFT_ENC_BOTTOM 7
 
 #define GYRO 1
 
@@ -18,38 +18,54 @@
 
 void InitDriveTrain()
 {
-  RightEncoder = encoderInit(RIGHT_ENC_TOP, RIGHT_ENC_BOTTOM, false);
-  LeftEncoder = encoderInit(LEFT_ENC_TOP,LEFT_ENC_BOTTOM,false);
+  RightEncoder = encoderInit(RIGHT_ENC_TOP, RIGHT_ENC_BOTTOM, true);
+  LeftEncoder = encoderInit(LEFT_ENC_TOP,LEFT_ENC_BOTTOM,true);
   baseGyro = gyroInit(GYRO,0);
 }
 
 void DriveOnLoop()
 {
+  /*
   int prevLeftEnc =  getLeftEncoder();
   int prevRightEnc = getRightEncoder();
+  */
 
   if(!(SystemsError()))
   {
       //if(EMERGENCY_BUTTON) then stop drive system
+      int strafe = deadband(joystickGetAnalog(1,4),15);
       int power = deadband(joystickGetAnalog(1,2),15);
       int turn = deadband(joystickGetAnalog(1,1),15);
 
-      motorSet(2,-power + turn);
-      motorSet(3,-power + turn);
-      motorSet(4,power + turn);
-      motorSet(5,power + turn);
-
-
+      motorSet(2,-power + turn + strafe);//rightmotors
+      motorSet(3,-power + turn - strafe);
+      motorSet(4,power + turn  + strafe);//leftmotors
+      motorSet(5,power + turn  - strafe);
       //arcadeDrive(3,4); //arcade drive with these axis
       //mecanumDrive(1);
   }
 
-  int finalLeftEnc = getLeftEncoder();
+  /*int finalLeftEnc = getLeftEncoder();
   int finalRightEnc = getRightEncoder();
   double rightDistance = distanceTraveled(finalRightEnc - prevRightEnc);
   double leftDistance = distanceTraveled(finalLeftEnc - prevLeftEnc);
   setRightVel(rightDistance/0.02);
-  setLeftVel(leftDistance/0.02);
+  setLeftVel(leftDistance/0.02);*/
+  if(iteration % 10)
+  {
+    printf("[ ");
+    //printf("RightVelocity: %f, ", rightDistance/0.02);
+    //printf("LeftVelocity: %f, ", rightDistance/0.02);
+    printf("RightEnc: %d, ", encoderGet(RightEncoder));
+    printf("RightEnc: %d, ", encoderGet(LeftEncoder));
+    printf("BaseGyro: %d ", gyroGet(baseGyro));
+
+    printf("] \n");
+    printf("%d, ", getRightEncoder());
+    printf("%d, ", getLeftEncoder());
+    printf("%d \n", getYaw());
+  }
+  ++iteration;
 }
 
 void arcadeDrive(unsigned char vert_axis, unsigned char hor_axis)

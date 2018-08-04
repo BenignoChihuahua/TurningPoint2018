@@ -12,14 +12,14 @@ void InitRollerIntake()
 
 void IntakeOnLoop()
 {
-  bool intake  = joystickGetDigital(1,6,JOY_UP) ;
+  bool intake  = joystickGetDigital(1,6,JOY_UP);
   bool backward = joystickGetDigital(1,5,JOY_DOWN);
   if(!IntakeError())
   {
     if(intake)
-      forward();
+      motorSet(INTAKE_MOTOR,64);
     else if(backward)
-      reverse();
+      motorSet(INTAKE_MOTOR,-64);
 
   }
 }

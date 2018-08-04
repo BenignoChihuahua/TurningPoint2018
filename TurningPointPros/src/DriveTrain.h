@@ -7,6 +7,7 @@
 Encoder RightEncoder;
 Encoder LeftEncoder;
 Gyro    baseGyro;
+int iteration;
 double rightVel;
 double leftVel;
 double angVel;
