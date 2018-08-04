@@ -1,7 +1,7 @@
 #include <API.h>
 #include <math.h>
 #include "DriveTrain.h"
-#include "PID.h"
+#include "../control/PID.h"
 #include "util.h"
 
 #define FRONT_RIGHT_MOTOR 2
@@ -59,16 +59,21 @@ void DriveOnLoop()
     prevLeftEnc = encoderGet(LeftEncoder);
   }
 
+  PrintDriveData();
+
+  ++iteration;
+}
+
+void PrintDriveData()
+{
   printf("[ ");
   printf("RightVelocity: %f, ", rightVel);
   printf("LeftVelocity: %f, ", leftVel);
   printf("RightEnc: %d, ", encoderGet(RightEncoder));
   printf("RightEnc: %d, ", encoderGet(LeftEncoder));
   printf("BaseGyro: %d ", gyroGet(baseGyro));
-  printf("distance traveled: %f", distanceTraveled(encoderGet(RightEncoder)));
+  printf("distance traveled: %f", encoderToDistance(encoderGet(RightEncoder)));
   printf("] \n");
-
-  ++iteration;
 }
 
 void driveDistance(double x)

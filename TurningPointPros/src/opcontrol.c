@@ -12,10 +12,10 @@
 
 #include "main.h"
 
-#include "DriveTrain.h"
-#include "RobotArm.h"
-#include "RollerIntake.h"
-#include "util.h"
+#include "subsystems/DriveTrain.h"
+#include "subsystems/RobotArm.h"
+#include "subsystems/RollerIntake.h"
+#include "util/util.h"
 /*
  * Runs the user operator control code. This function will be started in its own task with the
  * default priority and stack size whenever the robot is enabled via the Field Management System
@@ -37,21 +37,8 @@ void operatorControl() {
 
 
 	while (1) {
-		//DriveOnLoop();
+		DriveOnLoop();
 		setGyroSetpoint(0);
-		if(distanceTraveled((getRightEncoder() + getLeftEncoder())/2) < 48)
-		{
-			printf("Distance Traveled: %f \n",distanceTraveled((getRightEncoder() + getLeftEncoder())/2));
-			driveDistance(5);
-		}
-		else
-		{
-			motorSet(2,0);
-			motorSet(3,0);
-			motorSet(4,0);
-			motorSet(5,0);
-		}
-
 		ArmOnLoop();
 		IntakeOnLoop();
     /*
