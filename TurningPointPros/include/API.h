@@ -38,22 +38,27 @@ extern "C" {
  * DOWN button (valid on channels 5, 6, 7, 8)
  */
 #define JOY_DOWN 1
+
 /**
  * LEFT button (valid on channels 7, 8)
  */
 #define JOY_LEFT 2
+
 /**
  * UP button (valid on channels 5, 6, 7, 8)
  */
 #define JOY_UP 4
+
 /**
  * RIGHT button (valid on channels 7, 8)
  */
 #define JOY_RIGHT 8
+
 /**
  * Analog axis for the X acceleration from the VEX Joystick.
  */
 #define ACCEL_X 5
+
 /**
  * Analog axis for the Y acceleration from the VEX Joystick.
  */
@@ -66,6 +71,7 @@ extern "C" {
  * communications (even over VexNET) will still work properly.
  */
 bool isAutonomous();
+
 /**
  * Returns true if the robot is enabled, or false otherwise.
  *
@@ -625,6 +631,7 @@ int encoderGet(Encoder enc);
  * @return an Encoder object to be stored and used for later calls to encoder functions
  */
 Encoder encoderInit(unsigned char portTop, unsigned char portBottom, bool reverse);
+
 /**
  * Resets the encoder to zero.
  *
@@ -634,6 +641,7 @@ Encoder encoderInit(unsigned char portTop, unsigned char portBottom, bool revers
  * @param enc the Encoder object from encoderInit() to reset
  */
 void encoderReset(Encoder enc);
+
 /**
  * Stops and disables the encoder.
  *
@@ -1053,6 +1061,7 @@ int getchar();
  * @param string the string to write
  */
 void print(const char *string);
+
 /**
  * Writes one character to "stdout", which is the PC debug terminal, and returns the input
  * value.
