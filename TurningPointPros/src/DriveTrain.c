@@ -2,15 +2,15 @@
 #include "DriveTrain.h"
 #include "util.h"
 
-#define FRONT_RIGHT_MOTOR 1
-#define BACK_RIGHT_MOTOR  2
-#define FRONT_LEFT_MOTOR  3
-#define BACK_LEFT_MOTOR   4
+#define FRONT_RIGHT_MOTOR 2
+#define BACK_RIGHT_MOTOR  3
+#define FRONT_LEFT_MOTOR  4
+#define BACK_LEFT_MOTOR   5
 
-#define RIGHT_ENC_TOP 1
-#define RIGHT_ENC_BOTTOM 2
-#define LEFT_ENC_TOP 3
-#define LEFT_ENC_BOTTOM 4
+#define RIGHT_ENC_TOP 2
+#define RIGHT_ENC_BOTTOM 1
+#define LEFT_ENC_TOP 4
+#define LEFT_ENC_BOTTOM 3
 
 #define GYRO 1
 
@@ -25,14 +25,23 @@ void InitDriveTrain()
 
 void DriveOnLoop()
 {
-  int prevLeftEnc = getLeftEncoder();
+  int prevLeftEnc =  getLeftEncoder();
   int prevRightEnc = getRightEncoder();
 
   if(!(SystemsError()))
   {
       //if(EMERGENCY_BUTTON) then stop drive system
-      arcadeDrive(2,1); //arcade drive with these axis
-      mecanumDrive(3);
+      int power = deadband(joystickGetAnalog(1,2),15);
+      int turn = deadband(joystickGetAnalog(1,1),15);
+
+      motorSet(2,-power + turn);
+      motorSet(3,-power + turn);
+      motorSet(4,power + turn);
+      motorSet(5,power + turn);
+
+
+      //arcadeDrive(3,4); //arcade drive with these axis
+      //mecanumDrive(1);
   }
 
   int finalLeftEnc = getLeftEncoder();
@@ -41,13 +50,12 @@ void DriveOnLoop()
   double leftDistance = distanceTraveled(finalLeftEnc - prevLeftEnc);
   setRightVel(rightDistance/0.02);
   setLeftVel(leftDistance/0.02);
-
 }
 
 void arcadeDrive(unsigned char vert_axis, unsigned char hor_axis)
 {
-  int power = deadband(joystickGetAnalog(1,vert_axis),15);
-  int turn  = deadband(joystickGetAnalog(1,hor_axis) ,15);
+  int power = joystickGetAnalog(1,vert_axis);
+  int turn  = joystickGetAnalog(1,hor_axis);
   moveRightMotor(power - turn);
   moveLeftMotor(power + turn);
 }

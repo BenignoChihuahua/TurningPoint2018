@@ -37,9 +37,12 @@ static int choldc1(double * a, double * p, int n) {
 static int choldcsl(double * A, double * a, double * p, int n)
 {
     int i,j,k; double sum;
+
+    //copy over the contents of a into A
     for (i = 0; i < n; i++)
         for (j = 0; j < n; j++)
             a[i*n+j] = A[i*n+j];
+
     if (choldc1(a, p, n)) return 1;
     for (i = 0; i < n; i++) {
         a[i*n+i] = 1 / p[i];
@@ -285,6 +288,9 @@ void ekf_init(void * v, int n, int m)
     zeros(ekf.H, m, n);
 }
 
+/*
+ *
+ */
 int ekf_step(void * v, double * z)
 {
     /* unpack incoming structure */

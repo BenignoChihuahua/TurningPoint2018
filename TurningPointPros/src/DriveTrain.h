@@ -21,6 +21,7 @@ void setRightVel(double vel);
 void setLeftVel(double vel);
 int getLeftEncoder();
 int getRightEncoder();
+int getYaw();
 double distanceTraveled(int encoderCounts);
 double numRotations(int encoderCounts);
 

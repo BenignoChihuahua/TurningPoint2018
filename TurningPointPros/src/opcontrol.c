@@ -15,7 +15,7 @@
 #include "DriveTrain.h"
 #include "RobotArm.h"
 #include "RollerIntake.h"
-
+#include "util.h"
 /*
  * Runs the user operator control code. This function will be started in its own task with the
  * default priority and stack size whenever the robot is enabled via the Field Management System
@@ -35,16 +35,20 @@
  */
 void operatorControl() {
 
+	InitDriveTrain();
 	while (1) {
 		DriveOnLoop();
 		ArmOnLoop();
 		IntakeOnLoop();
-
+    /*
 		printf("[ ");
 		printf("rightVel: %f, " ,rightVel);
 		printf("leftVel: %f, " , leftVel);
-		printf("]");
-
+		printf("rightEnc: %d, ", getRightEncoder());
+		printf("leftEnc: %d, ",  getLeftEncoder());
+		printf("BaseAngle: %d, ", getYaw());
+		printf("] \n");
+    */
 		delay(20);
 	}
 }

@@ -34,7 +34,8 @@
 void ekf_init(void * ekf, int n, int m);
 
 /**
-  * Runs one step of EKF prediction and update. Your code should first build a model, setting
+  * Runs one step of EKF prediction and update. This should be run on the main loop
+  * to update the position of the robot. The code should first build a model, setting
   * the contents of <tt>ekf.fx</tt>, <tt>ekf.F</tt>, <tt>ekf.hx</tt>, and <tt>ekf.H</tt> to appropriate values.
   * @param ekf pointer to structure EKF
   * @param z array of measurement (observation) values

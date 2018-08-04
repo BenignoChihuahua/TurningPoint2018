@@ -31,7 +31,7 @@ class EKF {
         double * x;
 
         /**
-         * Initializes a TinyEKF object.
+         * Initializes a EKF object.
          */
         EKF() {
             ekf_init(&this->ekf, states, obs);
@@ -39,7 +39,7 @@ class EKF {
         }
 
         /**
-         * Deallocates memory for a TinyEKF object.
+         * Deallocates memory for aEKF object.
          */
         ~EKF() { }
 

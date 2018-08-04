@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "util.h"
 
-int deadband(int val, int deadband)
+int deadband(int power,int limit)
 {
-  return abs(val) < deadband ? 0 : val;
+  return abs(power) > limit ? power : 0;
 }
