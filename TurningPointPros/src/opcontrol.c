@@ -15,6 +15,7 @@
 #include "DriveTrain.h"
 #include "RobotArm.h"
 #include "RollerIntake.h"
+#include "PathFollower.h"
 #include "util.h"
 /*
  * Runs the user operator control code. This function will be started in its own task with the
@@ -35,10 +36,42 @@
  */
 void operatorControl() {
 
+	Path path;
+	int total = 0;
+	/*for(int i = 0; i < 25; i++)
+	{
+		Point point;
+		point.x = 0;
+		point.y = total + 1;
+		total += 1;
+		path.waypoints[i] = point;
+	}*/
+
+	Point point;
+	point.x = 0;
+	point.y = 2;
+	path.waypoints[0] = point;
+	Point point1;
+  point.x = 0;
+	point.y = 5;
+  path.waypoints[1] = point1;
+	Point point2;
+	point.x = 5;
+	point.y = 9;
+	path.waypoints[2] = point2;
+	Point point3;
+	point.x = 9;
+	point.y = 9;
+	path.waypoints[3] = point3;
+	InitPath(&path);
+
 	while (1) {
+
 		DriveOnLoop();
 		ArmOnLoop();
 		IntakeOnLoop();
+		followPath();
+		//driveToPoint(point);
     /*
 		printf("[ ");
 		printf("rightVel: %f, " ,rightVel);

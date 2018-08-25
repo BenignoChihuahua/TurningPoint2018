@@ -2,6 +2,7 @@
 #include "DriveTrain.h"
 #include "util.h"
 
+
 #define FRONT_RIGHT_MOTOR 2
 #define BACK_RIGHT_MOTOR  3
 #define FRONT_LEFT_MOTOR  4
@@ -21,14 +22,24 @@ void InitDriveTrain()
   RightEncoder = encoderInit(RIGHT_ENC_TOP, RIGHT_ENC_BOTTOM, true);
   LeftEncoder = encoderInit(LEFT_ENC_TOP,LEFT_ENC_BOTTOM,true);
   baseGyro = gyroInit(GYRO,0);
+  PIDInit(rVelControl,6,0,0);
+  rVelControl.p = 6;
+  rVelControl.i = 0;
+  rVelControl.d = 0;
+  rVelControl.maxOutput = 127;
+  rVelControl.minOutput = -127;
+
+  PIDInit(lVelControl,6,0,0);
+  lVelControl.p = 6;
+  lVelControl.i = 0;
+  lVelControl.d = 0;
+  lVelControl.maxOutput = 127;
+  lVelControl.minOutput = -127;
 }
 
 void DriveOnLoop()
 {
-  /*
-  int prevLeftEnc =  getLeftEncoder();
-  int prevRightEnc = getRightEncoder();
-  */
+
 
   if(!(SystemsError()))
   {
@@ -41,31 +52,42 @@ void DriveOnLoop()
       motorSet(3,-power + turn - strafe);
       motorSet(4,power + turn  + strafe);//leftmotors
       motorSet(5,power + turn  - strafe);
-      //arcadeDrive(3,4); //arcade drive with these axis
-      //mecanumDrive(1);
+
   }
 
-  /*int finalLeftEnc = getLeftEncoder();
+  int finalLeftEnc = getLeftEncoder();
   int finalRightEnc = getRightEncoder();
-  double rightDistance = distanceTraveled(finalRightEnc - prevRightEnc);
-  double leftDistance = distanceTraveled(finalLeftEnc - prevLeftEnc);
-  setRightVel(rightDistance/0.02);
-  setLeftVel(leftDistance/0.02);*/
+  rightDistance = distanceTraveled(finalRightEnc - prevRightEnc);
+  leftDistance = distanceTraveled(finalLeftEnc - prevLeftEnc);
+
   if(iteration % 10)
   {
-    printf("[ ");
-    //printf("RightVelocity: %f, ", rightDistance/0.02);
-    //printf("LeftVelocity: %f, ", rightDistance/0.02);
-    printf("RightEnc: %d, ", encoderGet(RightEncoder));
-    printf("RightEnc: %d, ", encoderGet(LeftEncoder));
-    printf("BaseGyro: %d ", gyroGet(baseGyro));
 
-    printf("] \n");
-    printf("%d, ", getRightEncoder());
-    printf("%d, ", getLeftEncoder());
-    printf("%d \n", getYaw());
+    updateVelocity();
+    //sensorData();
   }
+
+  prevLeftEnc =  getLeftEncoder();
+  prevRightEnc = getRightEncoder();
+
   ++iteration;
+}
+
+void sensorData()
+{
+  printf("[ ");
+  printf("RightVelocity: %f, ", rightDistance/0.02);
+  printf("LeftVelocity: %f, " , leftDistance/0.02);
+  printf("RightEnc: %d, "     , encoderGet(RightEncoder));
+  printf("LeftEnc: %d, "      , encoderGet(LeftEncoder));
+  printf("BaseGyro: %d "      , getYaw());
+  printf("] \n");
+}
+
+void updateVelocity()
+{
+  setRightVel(rightDistance/0.02);
+  setLeftVel(leftDistance/0.02);
 }
 
 void arcadeDrive(unsigned char vert_axis, unsigned char hor_axis)
@@ -90,6 +112,18 @@ bool SystemsError()
   return false;
 }
 
+void moveRightVel(double vel)
+{
+  rVelControl.setPoint = vel;
+  moveRightMotor(CalculateOutput(rVelControl,rightVel));
+}
+
+void moveLeftVel(double vel)
+{
+  lVelControl.setPoint = vel;
+  moveLeftMotor(CalculateOutput(lVelControl,leftVel));
+}
+
 void moveRightMotor(int val)
 {
   motorSet(FRONT_RIGHT_MOTOR, val);
@@ -98,8 +132,8 @@ void moveRightMotor(int val)
 
 void moveLeftMotor(int val)
 {
-  motorSet(FRONT_LEFT_MOTOR, val);
-  motorSet(BACK_LEFT_MOTOR, val);
+  motorSet(FRONT_LEFT_MOTOR, -val);
+  motorSet(BACK_LEFT_MOTOR, -val);
 }
 
 void resetEncoders()
@@ -131,6 +165,16 @@ void setRightVel(double vel)
 void setLeftVel(double vel)
 {
   leftVel = vel;
+}
+
+double getRightVel()
+{
+  return rightVel;
+}
+
+double getLeftVel()
+{
+  return leftVel;
 }
 
 double distanceTraveled(int encoderCounts)
